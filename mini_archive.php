@@ -43,7 +43,7 @@
 		
 	function mini_archive_meta_box($object,$box){
 		$archive_value = get_post_meta($object->ID,'mini_archive',true);
-		$post_types = array("Post","Group","Event");
+		$post_types = get_post_types();
 		
 		?>
 		<fieldset>
