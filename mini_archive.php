@@ -43,8 +43,9 @@
 		
 	function mini_archive_meta_box($object,$box){
 		$archive_value = get_post_meta($object->ID,'mini_archive',true);
-		$post_types = get_post_types();
-		
+		$post_types = get_post_types(Array(),'objects');
+		// remove nav menus?
+		// add buddypress?
 		?>
 		<fieldset>
 			<p>
@@ -55,7 +56,7 @@
 				<label for="mini_archive_type"><?=_e("Type of content to list");?></label>
 				<select id="mini_archive_type" name="mini_archive_type">
 					<? foreach($post_types as $post_type):	?>
-					<option value="<?=$post_type;?>" <? if($archive_value==$post_type){ echo 'selected="selected"'; } ?>><?=_e($post_type);?></option>
+					<option value="<?=$post_type->name;?>" <? if($archive_value==$post_type->name){ echo 'selected="selected"'; } ?>><?=_e($post_type->label);?></option>
 					<? endforeach; ?>
 				</select>
 			</p>
