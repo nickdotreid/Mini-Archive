@@ -8,7 +8,9 @@
    Author URI: http://nickreid.com
    License: GPL2
    */
-
+	
+	require_once('draw.php');
+	
 	/* Fire our meta box setup function on the post editor screen. */
 	add_action( 'load-page.php', 'mini_archive_meta_boxes_setup' );
 	add_action( 'load-page-new.php', 'mini_archive_meta_boxes_setup' );
@@ -64,5 +66,7 @@
 		</fieldset>
 		<?
 	}
+	
+
 
 ?>
