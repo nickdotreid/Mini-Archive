@@ -10,7 +10,26 @@ function mini_archive_draw(){
 			?>
 			<aside class="mini_archive">
 			<?
-			$wp_query = new WP_Query( 'post_type='.$archive_value );
+			$tax_query = array('relation'=>'AND');
+			$filters = get_post_meta(get_the_ID(),'mini_archive_filters',false);
+			foreach($filters as $filter){
+				$filter = unserialize($filter);
+				$query = array(
+					'taxonomy' => $filter['type'],
+					'field' => 'slug',
+					'terms' => $filter['term'],
+				);
+				if(array_key_exists('operator',$filter)){
+					$query['operator'] = $filter['operator'];
+				}
+				array_push($tax_query,$query);
+			}
+			$wp_query = new WP_Query(array(
+				"post_type"=>$archive_value,
+				"post_status"=>'publish',
+				"order_by" => 'menu_order date title',
+				"tax_query" => $tax_query
+			));
 			get_template_part( 'loop', $archive_value );
 			?>
 			</aside>
