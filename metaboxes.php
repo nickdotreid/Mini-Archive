@@ -41,12 +41,14 @@
 		
 		
 		delete_post_meta( $post_id, 'mini_archive_filters'); // delete all filters
+		if(!isset($_POST['mini_archive_filters'])){
+			return true;
+		}
 		foreach($_POST['mini_archive_filters'] as $filter):
 			if($filter['term'] && $filter['term']!=""){
 				add_post_meta($post_id, 'mini_archive_filters', serialize($filter));
 			}
 		endforeach;
-		// read all filters ~ then serialize and save
 	}
 	
 	function mini_archive_meta_boxes(){
