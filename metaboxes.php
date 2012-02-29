@@ -35,24 +35,40 @@
 		
 	function mini_archive_meta_box($object,$box){
 		$archive_value = get_post_meta($object->ID,'mini_archive',true);
+		$archive_filter = get_post_meta($object->ID,'mini_archive_filter',true);
 		$post_types = get_post_types(Array(),'objects');
-		// remove nav menus?
+		$taxonomies = get_taxonomies(Array(),'objects');
 		// add buddypress?
 		?>
-		<fieldset>
-			<p>
+		<fieldset id="mini_archive">
+			<fieldset>
 				<input id="mini_archive_opt_in" name="mini_archive_opt_in" value="true" type="checkbox" <? if($archive_value){ echo 'checked="checked"'; } ?> />
 				<label for="mini_archive_opt_in"><?=_e("Add an archive to this page.");?></label>
-			</p>
-			<p>
+			</fieldset>
+			<fieldset>
 				<label for="mini_archive_type"><?=_e("Type of content to list");?></label>
 				<select id="mini_archive_type" name="mini_archive_type">
 					<? foreach($post_types as $post_type):	?>
 					<option value="<?=$post_type->name;?>" <? if($archive_value==$post_type->name){ echo 'selected="selected"'; } ?>><?=_e($post_type->label);?></option>
 					<? endforeach; ?>
 				</select>
-			</p>
-			<p>Query filters will be added here</p>
+			</fieldset>
+			<fieldset class="query_types">
+				<legend>Types of Queries</legend>
+				<ul class="terms">
+				<? foreach($taxonomies as $term):	?>
+				<li><a href="#" value="<?=$term->name;?>"><?=$term->label;?></a></li>
+				<?	endforeach;	?>
+				</ul>
+			</fieldset>
+			<fieldset class="queries">
+				<legend>Queries</legend>
+				<? foreach($archive_filters as $filter):	?>
+				<fieldset>
+				<?print_r($filter);?>
+				</fieldset>
+				<?	endforeach;	?>
+			</fieldset>
 		</fieldset>
 		<?
 	}
