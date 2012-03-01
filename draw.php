@@ -32,7 +32,7 @@ function mini_archive_draw(){
 			));
 			get_template_part( 'loop', $archive_value );
 			?>
-			</aside>
+			</aside><!-- .mini-archive -->
 			<?
 		}
 	}
