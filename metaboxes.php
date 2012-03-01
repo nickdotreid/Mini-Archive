@@ -9,7 +9,7 @@
 	
 	function mini_archive_ajax_get_terms(){
 		if(isset($_POST['taxonomy']) && $_POST['taxonomy']!=""){
-			mini_archive_draw_query($_POST['taxonomy'],get_terms($_POST['taxonomy']));
+			mini_archive_draw_query($_POST['taxonomy']);
 		}
 		die();
 	}
@@ -62,7 +62,8 @@
 			);
 	}
 	
-	function mini_archive_draw_query($tax,$terms,$query=false){
+	function mini_archive_draw_query($tax,$query=false){
+		$terms = get_terms($tax);
 		?>
 		<fieldset class="query">
 			<input type="hidden" name="mini_archive_filters[position][type]" value="<?=$tax;?>" />
@@ -112,7 +113,7 @@
 				<legend>Queries</legend>
 				<? foreach($archive_filters as $filter):
 					$filter = unserialize($filter);
-					mini_archive_draw_query($filter['type'],get_terms($filter['type']),$filter);
+					mini_archive_draw_query($filter['type'],$filter);
 				endforeach;	?>
 			</fieldset>
 		</fieldset>
