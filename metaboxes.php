@@ -64,13 +64,24 @@
 	
 	function mini_archive_draw_query($tax,$query=false){
 		$terms = get_terms($tax);
+		if($tax=="groups"){
+			bp_has_groups();
+			$terms = array();
+			while(bp_groups()){
+				bp_the_group();
+				array_push($terms,(object) array(
+					'name' => bp_get_group_name(),
+					'slug' => bp_get_group_slug()
+				));
+			}
+		}
 		?>
 		<fieldset class="query">
 			<input type="hidden" name="mini_archive_filters[position][type]" value="<?=$tax;?>" />
 			<label>Pick a query term</label>
 			<select name="mini_archive_filters[position][term]">
 				<? foreach($terms as $term):	?>
-				<option <? if($query && $query['term']==$term->name){ echo 'selected="selected"'; }?> value="<?=$term->slug;?>"><?=$term->name;?></option>
+				<option <? if($query && $query['term']==$term->slug){ echo 'selected="selected"'; }?> value="<?=$term->slug;?>"><?=$term->name;?></option>
 				<? endforeach; ?>
 			</select>
 			<label class="checkbox">
@@ -88,6 +99,17 @@
 		$post_types = get_post_types(Array(),'objects');
 		$taxonomies = get_taxonomies(Array(),'objects');
 		// add buddypress?
+		if(bp_has_groups()){
+			array_push($post_types,(object) array(
+				"name"=>"members",
+				"label"=>"Members"
+			));
+			
+			array_push($taxonomies,(object) array(
+				"name"=>"groups",
+				"label"=>"Groups"
+			));
+		}
 		?>
 		<fieldset id="mini_archive">
 			<fieldset>
