@@ -2,8 +2,6 @@
 
 add_action('get_footer','mini_archive_draw',10);
 function mini_archive_draw(){
-	global $wp_query;
-	$old_query = $wp_query; // stash original query
 	if(is_page()){
 		$archive_value = get_post_meta(get_the_ID(),'mini_archive',true);
 		if($archive_value){
@@ -24,19 +22,21 @@ function mini_archive_draw(){
 				}
 				array_push($tax_query,$query);
 			}
-			$wp_query = new WP_Query(array(
+			$query = new WP_Query(array(
 				"post_type"=>$archive_value,
 				"post_status"=>'publish',
 				"order_by" => 'menu_order date title',
 				"tax_query" => $tax_query
 			));
-			get_template_part( 'loop', $archive_value );
+			while($query->have_posts()) {
+				$query->the_post();
+				get_template_part( 'content', $archive_value );
+			}
 			?>
 			</aside><!-- .mini-archive -->
 			<?
 		}
 	}
-	$wp_query = $old_query;
 }
 
 ?>
