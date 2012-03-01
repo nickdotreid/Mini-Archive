@@ -63,20 +63,17 @@
 	}
 	
 	function mini_archive_draw_query($tax,$query=false){
-		$terms = get_terms($tax);
-		if($tax=="groups"){
-			bp_has_groups();
-			$terms = array();
-			while(bp_groups()){
-				bp_the_group();
-				array_push($terms,(object) array(
-					'name' => bp_get_group_name(),
-					'slug' => bp_get_group_slug()
-				));
-			}
+		$terms = array();
+		if($tax=="groups" && MINI_ARCHIVE_BP_IS_INSTALLED){
+			$groups = groups_get_groups();
+			$terms = $groups['groups'];
+		}else{
+			$terms = get_terms($tax);
 		}
+		
 		?>
 		<fieldset class="query">
+			<?	if(count($terms)>0):	?>
 			<input type="hidden" name="mini_archive_filters[position][type]" value="<?=$tax;?>" />
 			<label>Pick a query term</label>
 			<select name="mini_archive_filters[position][term]">
@@ -89,6 +86,9 @@
 				Not in selected fields
 			</label>
 			<a href="#" class="remove">Remove</a>
+			<?	else:	?>
+			<p>Nothing to query</p>
+			<?	endif;	?>
 		</fieldset>
 		<?
 	}
@@ -98,13 +98,12 @@
 		$archive_filters = get_post_meta($object->ID,'mini_archive_filters',false);
 		$post_types = get_post_types(Array(),'objects');
 		$taxonomies = get_taxonomies(Array(),'objects');
-		// add buddypress?
-		if(bp_has_groups()){
+		
+		if(MINI_ARCHIVE_BP_IS_INSTALLED){
 			array_push($post_types,(object) array(
 				"name"=>"members",
 				"label"=>"Members"
-			));
-			
+			));			
 			array_push($taxonomies,(object) array(
 				"name"=>"groups",
 				"label"=>"Groups"
