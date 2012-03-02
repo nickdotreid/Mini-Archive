@@ -45,25 +45,4 @@ function mini_archive_get_tax_query($ID){
 	return $tax_query;
 }
 
-function mini_archive_get_members($ID=false){
-	$ID = mini_archive_on_page($ID);
-	if(!$ID){
-		return false;
-	}
-	$members = array();
-	$filters = get_post_meta($ID,'mini_archive_filters',false);
-	foreach($filters as $filter):
-		$filter = unserialize($filter);
-		if($filter['type']=='groups'):
-			bp_group_has_members("group_id=".$filter['term']."&exclude_admins_mods=false&per_page=100");
-			while(bp_group_members()):
-				bp_group_the_member();
-				$user = new WP_User(bp_get_group_member_id());
-				array_push($members,$user);
-			endwhile;
-		endif;
-	endforeach;
-	return $members;
-}
-
 ?>

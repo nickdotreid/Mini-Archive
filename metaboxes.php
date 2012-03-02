@@ -63,17 +63,7 @@
 	}
 	
 	function mini_archive_draw_query($tax,$query=false){
-		$terms = array();
-		if($tax=="groups" && MINI_ARCHIVE_BP_IS_INSTALLED){
-			$groups = groups_get_groups();
-			$terms = $groups['groups'];
-			foreach($terms as $term):
-				$term->slug = $term->id;
-			endforeach;
-		}else{
-			$terms = get_terms($tax);
-		}
-		
+		$terms = get_terms($tax);
 		?>
 		<fieldset class="query">
 			<?	if(count($terms)>0):	?>
@@ -101,17 +91,6 @@
 		$archive_filters = get_post_meta($object->ID,'mini_archive_filters',false);
 		$post_types = get_post_types(Array(),'objects');
 		$taxonomies = get_taxonomies(Array(),'objects');
-		
-		if(MINI_ARCHIVE_BP_IS_INSTALLED){
-			array_push($post_types,(object) array(
-				"name"=>"members",
-				"label"=>"Members"
-			));			
-			array_push($taxonomies,(object) array(
-				"name"=>"groups",
-				"label"=>"Groups"
-			));
-		}
 		?>
 		<fieldset id="mini_archive">
 			<fieldset>
