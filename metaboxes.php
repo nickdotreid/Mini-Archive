@@ -89,8 +89,8 @@
 	function mini_archive_meta_box($object,$box){
 		$archive_value = get_post_meta($object->ID,'mini_archive',true);
 		$archive_filters = get_post_meta($object->ID,'mini_archive_filters',false);
-		$post_types = get_post_types(Array(),'objects');
-		$taxonomies = get_taxonomies(Array(),'objects');
+		$post_types = get_post_types(array(),'objects');
+		$taxonomies = get_taxonomies(array(),'objects');
 		?>
 		<fieldset id="mini_archive">
 			<fieldset>
