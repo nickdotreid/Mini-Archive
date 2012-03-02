@@ -13,7 +13,7 @@ function mini_archive_draw(){
 			do_action('mini_archive_before');
 			while($query->have_posts()) {
 				$query->the_post();
-				get_template_part( 'content', $archive_type );
+				get_template_part( 'list', $archive_type );
 			}
 			do_action('mini_archive_after');	
 			?>
