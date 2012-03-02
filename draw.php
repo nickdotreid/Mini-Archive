@@ -10,10 +10,12 @@ function mini_archive_draw(){
 			<?
 			$archive_type = get_post_meta(get_the_ID(),'mini_archive',true);
 			$query = mini_archive_get_query();
+			do_action('mini_archive_before');
 			while($query->have_posts()) {
 				$query->the_post();
 				get_template_part( 'content', $archive_type );
-			}	
+			}
+			do_action('mini_archive_after');	
 			?>
 			</aside><!-- .mini-archive -->
 			<?
