@@ -11,17 +11,18 @@ function mini_archive_on_page($ID=false){
 	return false;
 }
 
-function mini_archive_get_query($ID=false){
+function mini_archive_get_query($ID=false,$posts_per_page=-1,$paged=1){
 	$ID = mini_archive_on_page($ID);
 	if(!$ID){
 		return false;
 	}
-	
 	$query = new WP_Query(array(
 		"post_type"=>get_post_meta($ID,'mini_archive',true),
 		"post_status"=>'publish',
 		"order_by" => 'menu_order date title',
 		"tax_query" => mini_archive_get_tax_query($ID),
+		"posts_per_page" => $posts_per_page,
+		"paged" => $paged
 	));
 	return $query;
 }
