@@ -6,7 +6,7 @@ function mini_archive_on_page($ID=false){
 	}
 	$archive = get_post_meta($ID,'mini_archive',true);
 	if($archive){
-		return $ID;
+		return $archive;
 	}
 	return false;
 }
