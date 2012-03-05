@@ -12,8 +12,11 @@ function mini_archive_on_page($ID=false){
 }
 
 function mini_archive_get_query($ID=false,$posts_per_page=-1,$paged=1){
-	$ID = mini_archive_on_page($ID);
 	if(!$ID){
+		$ID = get_the_ID();
+	}
+	$archive_type = mini_archive_on_page($ID);
+	if(!$archive_type){
 		return false;
 	}
 	$query = new WP_Query(array(
