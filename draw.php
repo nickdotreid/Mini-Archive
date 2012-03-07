@@ -19,10 +19,26 @@ function mini_archive_draw(){
 					<?
 				endforeach;
 			elseif($archive_type="bp_group"):
-				if(bp_has_groups(array())):
+				$filters = get_post_meta(get_the_ID(),'mini_archive_filters',false);
+				if(bp_has_groups(array(
+					"type" => "alphabetical",
+				))):
 					while(bp_groups()){
 						bp_the_group();
-						include MINI_ARCHIVE_PLUGIN_DIR.'/templates/buddypress/list-group.php';
+						$add = true;
+						foreach($filters as $filter){
+							$filter = unserialize($filter);
+							if($filter['type'] == 'bp_groups'):
+								if(bp_get_group_id()==$filter['term']){
+									$add = true;
+								}else{
+									$add = false;
+								}
+							endif;
+						}
+						if($add){
+							include MINI_ARCHIVE_PLUGIN_DIR.'/templates/buddypress/list-group.php';	
+						}
 					}
 				endif;
 			else:
