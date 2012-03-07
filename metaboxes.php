@@ -102,10 +102,12 @@
 	function mini_archive_get_taxonomies(){
 		$taxonomies = get_taxonomies(Array(),'objects');
 		if(MINI_ARCHIVE_BP_IS_INSTALLED){
-			array_push($taxonomies,(object) array(
-				"name"=>"bp_groups",
-				"label"=>"BP Groups"
-			));
+			if(BP_GROUP_HIERARCHY_IS_INSTALLED){
+				array_push($taxonomies,(object) array(
+					"name"=>"bp_groups",
+					"label"=>"BP Groups"
+				));
+			}
 		}
 		return $taxonomies;
 	}
