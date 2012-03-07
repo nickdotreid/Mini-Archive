@@ -18,7 +18,7 @@ function mini_archive_draw(){
 					</article>
 					<?
 				endforeach;
-			elseif($archive_type="bp_group"):
+			elseif($archive_type=="bp_group"):
 				if(bp_has_groups(array(
 					"type" => "alphabetical",
 				))):
@@ -30,6 +30,7 @@ function mini_archive_draw(){
 					}
 				endif;
 			else:
+				
 				$query = mini_archive_get_query();
 				while($query->have_posts()) {
 					$query->the_post();
