@@ -83,23 +83,39 @@
 			include MINI_ARCHIVE_PLUGIN_DIR.'/templates/admin/query.php';
 		endif;
 	}
-		
-	function mini_archive_meta_box($object,$box){
-		$archive_value = get_post_meta($object->ID,'mini_archive',true);
-		$archive_filters = get_post_meta($object->ID,'mini_archive_filters',false);
+	
+	function mini_archive_get_post_types(){
 		$post_types = get_post_types(Array(),'objects');
-		$taxonomies = get_taxonomies(Array(),'objects');
-		
 		if(MINI_ARCHIVE_BP_IS_INSTALLED){
 			array_push($post_types,(object) array(
 				"name"=>"members",
 				"label"=>"Members"
-			));			
-			array_push($taxonomies,(object) array(
-				"name"=>"groups",
-				"label"=>"Groups"
+			));
+			array_push($post_types,(object) array(
+				"name"=>"bp_groups",
+				"label"=>"BP Groups"
 			));
 		}
+		return $post_types;
+	}
+	
+	function mini_archive_get_taxonomies(){
+		$taxonomies = get_taxonomies(Array(),'objects');
+		if(MINI_ARCHIVE_BP_IS_INSTALLED){
+			array_push($taxonomies,(object) array(
+				"name"=>"bp_groups",
+				"label"=>"BP Groups"
+			));
+		}
+		return $taxonomies;
+	}
+	
+	function mini_archive_meta_box($object,$box){
+		$archive_value = get_post_meta($object->ID,'mini_archive',true);
+		$archive_filters = get_post_meta($object->ID,'mini_archive_filters',false);
+		
+		$post_types = mini_archive_get_post_types();
+		$taxonomies = mini_archive_get_taxonomies();
 		
 		$locations = array(
 			'/templates/mini_archive/admin/metabox.php',
