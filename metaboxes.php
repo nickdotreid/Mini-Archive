@@ -64,7 +64,7 @@
 	
 	function mini_archive_draw_query($tax,$query=false){
 		$terms = array();
-		if($tax=="bp_groups" && MINI_ARCHIVE_BP_IS_INSTALLED){
+		if(($tax=="bp_groups" || $tax=="bp_group_children") && MINI_ARCHIVE_BP_IS_INSTALLED){
 			$groups = groups_get_groups();
 			$terms = $groups['groups'];
 			foreach($terms as $term):
