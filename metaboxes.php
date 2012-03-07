@@ -74,26 +74,14 @@
 			$terms = get_terms($tax);
 		}
 		
-		?>
-		<fieldset class="query">
-			<?	if(count($terms)>0):	?>
-			<input type="hidden" name="mini_archive_filters[position][type]" value="<?=$tax;?>" />
-			<label>Pick a query term</label>
-			<select name="mini_archive_filters[position][term]">
-				<? foreach($terms as $term):	?>
-				<option <? if($query && $query['term']==$term->slug){ echo 'selected="selected"'; }?> value="<?=$term->slug;?>"><?=$term->name;?></option>
-				<? endforeach; ?>
-			</select>
-			<label class="checkbox">
-				<input type="checkbox" value="NOT IN" name="mini_archive_filters[position][operator]" <? if($query && array_key_exists('operator',$query) && $query['operator']=='NOT IN'){ echo 'checked="checked"'; }?> />
-				Not in selected fields
-			</label>
-			<a href="#" class="remove">Remove</a>
-			<?	else:	?>
-			<p>Nothing to query</p>
-			<?	endif;	?>
-		</fieldset>
-		<?
+		$locations = array(
+			'/templates/mini_archive/admin/query.php',
+			'/mini_archive/admin/query.php',
+			'/admin/mini_archive_query.php',
+		);
+		if(locate_template( $locations )==""):
+			include MINI_ARCHIVE_PLUGIN_DIR.'/templates/admin/query.php';
+		endif;
 	}
 		
 	function mini_archive_meta_box($object,$box){
@@ -112,36 +100,15 @@
 				"label"=>"Groups"
 			));
 		}
-		?>
-		<fieldset id="mini_archive">
-			<fieldset>
-				<input id="mini_archive_opt_in" name="mini_archive_opt_in" value="true" type="checkbox" <? if($archive_value){ echo 'checked="checked"'; } ?> />
-				<label for="mini_archive_opt_in"><?=_e("Add an archive to this page.");?></label>
-			</fieldset>
-			<fieldset>
-				<label for="mini_archive_type"><?=_e("Type of content to list");?></label>
-				<select id="mini_archive_type" name="mini_archive_type">
-					<? foreach($post_types as $post_type):	?>
-					<option value="<?=$post_type->name;?>" <? if($archive_value==$post_type->name){ echo 'selected="selected"'; } ?>><?=_e($post_type->label);?></option>
-					<? endforeach; ?>
-				</select>
-				<label for="mini_archive_add_query">
-				<select id="mini_archive_add_query">
-				<? foreach($taxonomies as $term):	?>
-					<option value="<?=$term->name;?>"><?=$term->label;?></option>
-				<?	endforeach;	?>
-				</select>
-				<a id="mini_archive_add_query_button" href="#" class="button">Add Query Type</a>
-			</fieldset>
-			<fieldset id="mini_archive_queries" class="queries">
-				<legend>Queries</legend>
-				<? foreach($archive_filters as $filter):
-					$filter = unserialize($filter);
-					mini_archive_draw_query($filter['type'],$filter);
-				endforeach;	?>
-			</fieldset>
-		</fieldset>
-		<?
+		
+		$locations = array(
+			'/templates/mini_archive/admin/metabox.php',
+			'/mini_archive/admin/metabox.php',
+			'/admin/mini_archive_metabox.php',
+		);
+		if(locate_template( $locations )==""):
+			include MINI_ARCHIVE_PLUGIN_DIR.'/templates/admin/metabox.php';
+		endif;
 	}
 
 ?>
