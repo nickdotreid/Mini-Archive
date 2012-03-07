@@ -11,6 +11,18 @@ function mini_archive_on_page($ID=false){
 	return false;
 }
 
+function mini_archive_get_filters($ID=false){
+	if(!$ID){
+		$ID = get_the_ID();
+	}
+	$filters = get_post_meta($ID,'mini_archive_filters',false);
+	$unserialized_filters = array();
+	foreach($filters as $filter){
+		array_push($unserialized_filters,unserialize($filter));
+	}
+	return $unserialized_filters;
+}
+
 function mini_archive_get_query($ID=false){
 	$ID = mini_archive_on_page($ID);
 	if(!$ID){
@@ -28,7 +40,7 @@ function mini_archive_get_query($ID=false){
 
 function mini_archive_get_tax_query($ID){
 	$tax_query = array('relation'=>'AND');
-	$filters = get_post_meta($ID,'mini_archive_filters',false);
+	$filters = mini_archive_get_filters();
 	foreach($filters as $filter){
 		$filter = unserialize($filter);
 		$query = array(
