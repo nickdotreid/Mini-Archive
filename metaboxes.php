@@ -64,10 +64,11 @@
 	
 	function mini_archive_draw_query($tax,$query=false){
 		$terms = array();
-		if($tax=="groups" && MINI_ARCHIVE_BP_IS_INSTALLED){
+		if($tax=="bp_groups" && MINI_ARCHIVE_BP_IS_INSTALLED){
 			$groups = groups_get_groups();
 			$terms = $groups['groups'];
 			foreach($terms as $term):
+				$term->name = $term->name." (".$term->slug.")";
 				$term->slug = $term->id;
 			endforeach;
 		}else{
