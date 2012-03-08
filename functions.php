@@ -40,9 +40,8 @@ function mini_archive_get_query($ID=false){
 
 function mini_archive_get_tax_query($ID){
 	$tax_query = array('relation'=>'AND');
-	$filters = mini_archive_get_filters();
+	$filters = mini_archive_get_filters($ID);
 	foreach($filters as $filter){
-		$filter = unserialize($filter);
 		$query = array(
 			'taxonomy' => $filter['type'],
 			'field' => 'slug',
@@ -53,7 +52,6 @@ function mini_archive_get_tax_query($ID){
 		}
 		array_push($tax_query,$query);
 	}
-	
 	return $tax_query;
 }
 
