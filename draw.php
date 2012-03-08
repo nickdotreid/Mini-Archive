@@ -37,8 +37,11 @@ function mini_archive_draw(){
 					'/mini_archive-loop.php',
 					'/mini_archive.php',
 				);
-				if(locate_template( $locations, true )==""):
+				$template = locate_template( $locations );
+				if($template==""):
 					include MINI_ARCHIVE_PLUGIN_DIR.'/templates/mini_archive/mini_archive.php';
+				else:
+					include $template;
 				endif;
 			endif;
 	}
