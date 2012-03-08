@@ -31,9 +31,13 @@ function mini_archive_draw(){
 				$locations = array(
 					'/templates/mini_archive/'.$archive_type.'.php',
 					'/mini_archive/'.$archive_type.'.php',
-					'mini_archive-'.$archive_type.'.php',
+					'/mini_archive-'.$archive_type.'.php',
+					'/templates/mini_archive/loop.php',
+					'/mini_archive/loop.php',
+					'/mini_archive-loop.php',
+					'/mini_archive.php',
 				);
-				if(locate_template( $locations )==""):
+				if(locate_template( $locations, true )==""):
 					include MINI_ARCHIVE_PLUGIN_DIR.'/templates/mini_archive/mini_archive.php';
 				endif;
 			endif;
