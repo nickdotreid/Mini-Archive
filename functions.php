@@ -11,7 +11,20 @@ function mini_archive_on_page($ID=false){
 	return false;
 }
 
-function mini_archive_get_query($ID=false,$posts_per_page=-1,$paged=1){
+function mini_archive_get_filters($ID=false){
+	if(!$ID){
+		$ID = get_the_ID();
+	}
+	$filters = get_post_meta($ID,'mini_archive_filters',false);
+	$unserialized_filters = array();
+	foreach($filters as $filter){
+		array_push($unserialized_filters,unserialize($filter));
+	}
+	return $unserialized_filters;
+}
+
+function mini_archive_get_query($ID=false){
+	$ID = mini_archive_on_page($ID);
 	if(!$ID){
 		$ID = get_the_ID();
 	}
@@ -32,9 +45,8 @@ function mini_archive_get_query($ID=false,$posts_per_page=-1,$paged=1){
 
 function mini_archive_get_tax_query($ID){
 	$tax_query = array('relation'=>'AND');
-	$filters = get_post_meta($ID,'mini_archive_filters',false);
+	$filters = mini_archive_get_filters($ID);
 	foreach($filters as $filter){
-		$filter = unserialize($filter);
 		$query = array(
 			'taxonomy' => $filter['type'],
 			'field' => 'slug',
@@ -45,8 +57,40 @@ function mini_archive_get_tax_query($ID){
 		}
 		array_push($tax_query,$query);
 	}
-	
 	return $tax_query;
 }
 
+function mini_archive_get_members($ID=false){
+	$ID = mini_archive_on_page($ID);
+	if(!$ID){
+		return false;
+	}
+	$members = array();
+	$filters = get_post_meta($ID,'mini_archive_filters',false);
+	foreach($filters as $filter):
+		$filter = unserialize($filter);
+		if($filter['type']=='groups'):
+			bp_group_has_members("group_id=".$filter['term']."&exclude_admins_mods=false&per_page=100");
+			while(bp_group_members()):
+				bp_group_the_member();
+				$user = new WP_User(bp_get_group_member_id());
+				array_push($members,$user);
+			endwhile;
+		endif;
+	endforeach;
+	return $members;
+}
+
+function mini_archive_bp_filter_group($archive_ID){
+	$filters = get_post_meta($archive_ID,'mini_archive_filters',false);
+	foreach($filters as $filter){
+		$filter = unserialize($filter);
+		if($filter['type'] == 'bp_group_children'):
+			if(bp_get_group_id()==$filter['term']){
+				return true;
+			}
+		endif;
+	}
+	return false;
+}
 ?>
