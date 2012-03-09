@@ -27,21 +27,23 @@ function mini_archive_draw(){
 					}
 				endif;
 			else:
-				$query = mini_archive_get_query();
-				$locations = array(
-					'/templates/mini_archive/'.$archive_type.'.php',
-					'/mini_archive/'.$archive_type.'.php',
-					'/mini_archive-'.$archive_type.'.php',
-					'/templates/mini_archive/loop.php',
-					'/mini_archive/loop.php',
-					'/mini_archive-loop.php',
-					'/mini_archive.php',
-				);
-				$template = locate_template( $locations );
-				if($template==""):
-					include MINI_ARCHIVE_PLUGIN_DIR.'/templates/mini_archive/mini_archive.php';
-				else:
-					include $template;
+				$query = mini_archive_get_query(get_the_ID());
+				if($query):
+					$locations = array(
+						'/templates/mini_archive/'.$archive_type.'.php',
+						'/mini_archive/'.$archive_type.'.php',
+						'/mini_archive-'.$archive_type.'.php',
+						'/templates/mini_archive/loop.php',
+						'/mini_archive/loop.php',
+						'/mini_archive-loop.php',
+						'/mini_archive.php',
+					);
+					$template = locate_template( $locations );
+					if($template==""):
+						include MINI_ARCHIVE_PLUGIN_DIR.'/templates/mini_archive/mini_archive.php';
+					else:
+						include $template;
+					endif;
 				endif;
 			endif;
 	}

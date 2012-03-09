@@ -24,7 +24,6 @@ function mini_archive_get_filters($ID=false){
 }
 
 function mini_archive_get_query($ID=false){
-	$ID = mini_archive_on_page($ID);
 	if(!$ID){
 		$ID = get_the_ID();
 	}
@@ -32,14 +31,13 @@ function mini_archive_get_query($ID=false){
 	if(!$archive_type){
 		return false;
 	}
-	$query = new WP_Query(array(
+	$args = array(
 		"post_type"=>get_post_meta($ID,'mini_archive',true),
 		"post_status"=>'publish',
 		"order_by" => 'menu_order date title',
 		"tax_query" => mini_archive_get_tax_query($ID),
-		"posts_per_page" => $posts_per_page,
-		"paged" => $paged
-	));
+	);
+	$query = new WP_Query($args);
 	return $query;
 }
 
