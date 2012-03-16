@@ -4,6 +4,7 @@ include_once('functions.php');
 
 add_action('get_footer','mini_archive_draw',10);
 function mini_archive_draw(){
+	global $wp_query;
 	if(is_page() && mini_archive_on_page()){
 			$archive_type = get_post_meta(get_the_ID(),'mini_archive',true);
 			if($archive_type=='members'):
@@ -49,7 +50,11 @@ function mini_archive_draw(){
 					if($template==""):
 						include MINI_ARCHIVE_PLUGIN_DIR.'/templates/mini_archive/mini_archive.php';
 					else:
+						$original_query = $wp_query;
+						$wp_query = $query;
 						include $template;
+						$wp_query = $original_query;
+						wp_reset_postdata();
 					endif;
 				endif;
 			endif;
