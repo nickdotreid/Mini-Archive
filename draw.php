@@ -33,10 +33,17 @@ function mini_archive_draw(){
 						'/templates/mini_archive/'.$archive_type.'.php',
 						'/mini_archive/'.$archive_type.'.php',
 						'/mini_archive-'.$archive_type.'.php',
+						'/templates/archive/'.$archive_type.'.php',
+						'/archive/'.$archive_type.'.php',
+						'/archive-'.$archive_type.'.php',
 						'/templates/mini_archive/loop.php',
 						'/mini_archive/loop.php',
 						'/mini_archive-loop.php',
 						'/mini_archive.php',
+						'/templates/archive/loop.php',
+						'/archive/loop.php',
+						'/archive-loop.php',
+						'/archive.php',
 					);
 					$template = locate_template( $locations );
 					if($template==""):
