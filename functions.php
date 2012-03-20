@@ -55,6 +55,24 @@ function mini_archive_get_tax_query($ID){
 		}
 		array_push($tax_query,$query);
 	}
+	return array_merge($tax_query,mini_archive_get_url_vars());
+}
+
+function mini_archive_get_url_vars(){
+	$tax_query = array();
+	$get_keys = array_keys($_GET);
+	foreach($get_keys as $key){
+		if(taxonomy_exists($key)){
+			$term = get_term_by("slug",$_GET[$key],$key);
+			if($term){
+				array_push($tax_query,array(
+					'taxonomy' => $term->taxonomy,
+					'field' => 'slug',
+					'terms' => $term->slug,
+				));
+			}
+		}
+	}
 	return $tax_query;
 }
 
