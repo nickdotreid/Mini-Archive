@@ -7,15 +7,17 @@ function mini_archive_draw(){
 	global $wp_query;
 	if(is_page() && mini_archive_on_page()){
 			$archive_type = get_post_meta(get_the_ID(),'mini_archive',true);
-			if($archive_type=='members'):
-				$members = mini_archive_get_members();
-				foreach($members as $member):
-					?>
-					<article class="member">
-						<?=$member->user_nicename;?>
-					</article>
-					<?
-				endforeach;
+			if($archive_type=='users'):
+				$users = mini_archive_get_users();
+				$locations = array(
+					'/mini_archive-users.php',
+				);
+				$template = locate_template( $locations );
+				if($template==""):
+					include MINI_ARCHIVE_PLUGIN_DIR.'/templates/mini_archive/mini_archive-users.php';
+				else:
+					include $template;
+				endif;
 			else:
 				$query = mini_archive_get_query(get_the_ID());
 				if($query):

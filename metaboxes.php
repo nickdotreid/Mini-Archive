@@ -77,6 +77,10 @@
 	
 	function mini_archive_get_post_types(){
 		$post_types = get_post_types(Array(),'objects');
+		array_push($post_types,(object) array(
+			"name"=>"users",
+			"label"=>"Users"
+		));
 		return $post_types;
 	}
 	
