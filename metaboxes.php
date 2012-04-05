@@ -63,17 +63,7 @@
 	}
 	
 	function mini_archive_draw_query($tax,$query=false){
-		$terms = array();
-		if(($tax=="bp_groups" || $tax=="bp_group_children") && MINI_ARCHIVE_BP_IS_INSTALLED){
-			$groups = groups_get_groups();
-			$terms = $groups['groups'];
-			foreach($terms as $term):
-				$term->name = $term->name." (".$term->slug.")";
-				$term->slug = $term->id;
-			endforeach;
-		}else{
-			$terms = get_terms($tax);
-		}
+		$terms = get_terms($tax);
 		
 		$locations = array(
 			'/templates/mini_archive/admin/query.php',
