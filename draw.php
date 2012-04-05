@@ -16,17 +16,6 @@ function mini_archive_draw(){
 					</article>
 					<?
 				endforeach;
-			elseif($archive_type=="bp_group"):
-				if(bp_has_groups(array(
-					"type" => "alphabetical",
-				))):
-					while(bp_groups()){
-						bp_the_group();
-						if(mini_archive_bp_filter_group(get_the_ID())){
-							include MINI_ARCHIVE_PLUGIN_DIR.'/templates/buddypress/list-group.php';	
-						}
-					}
-				endif;
 			else:
 				$query = mini_archive_get_query(get_the_ID());
 				if($query):

@@ -87,33 +87,11 @@
 	
 	function mini_archive_get_post_types(){
 		$post_types = get_post_types(Array(),'objects');
-		if(MINI_ARCHIVE_BP_IS_INSTALLED){
-			array_push($post_types,(object) array(
-				"name"=>"members",
-				"label"=>"Members"
-			));
-			array_push($post_types,(object) array(
-				"name"=>"bp_groups",
-				"label"=>"BP Groups"
-			));
-		}
 		return $post_types;
 	}
 	
 	function mini_archive_get_taxonomies(){
 		$taxonomies = get_taxonomies(Array(),'objects');
-		if(MINI_ARCHIVE_BP_IS_INSTALLED){
-			array_push($taxonomies,(object) array(
-				"name"=>"bp_group",
-				"label"=>"BP Group"
-			));
-			if(BP_GROUP_HIERARCHY_IS_INSTALLED){
-				array_push($taxonomies,(object) array(
-					"name"=>"bp_group_children",
-					"label"=>"BP Group Sub Groups"
-				));
-			}
-		}
 		return $taxonomies;
 	}
 	

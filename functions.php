@@ -97,16 +97,4 @@ function mini_archive_get_members($ID=false){
 	return $members;
 }
 
-function mini_archive_bp_filter_group($archive_ID){
-	$filters = get_post_meta($archive_ID,'mini_archive_filters',false);
-	foreach($filters as $filter){
-		$filter = unserialize($filter);
-		if($filter['type'] == 'bp_group_children'):
-			if(bp_get_group_id()==$filter['term']){
-				return true;
-			}
-		endif;
-	}
-	return false;
-}
 ?>
