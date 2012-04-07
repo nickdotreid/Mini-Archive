@@ -1,3 +1,8 @@
 #mini_archive .template{
 	display:none;
 }
+
+#mini_archive .form_row{
+	display:block;
+	margin-bottom:4px;
+}
