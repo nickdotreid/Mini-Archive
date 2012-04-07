@@ -29,26 +29,25 @@
 	}
 	
 	function mini_archive_save($post_id,$post){
-		$meta_key = 'mini_archive';
-		if(!isset($_POST['mini_archive_opt_in']) || !isset($_POST['mini_archive_type'])){
-			delete_post_meta( $post_id, $meta_key);
-			delete_post_meta( $post_id, 'mini_archive_filters'); // delete all filters
-			return true;
+		if(!isset($_POST['mini_archive_opt_in']))	delete_post_meta( $post_id, 'mini_archive_active');
+		else update_post_meta($post_id, 'mini_archive_active', true);
+		
+		if(isset($_POST['mini_archive_type'])){
+			// generate wp-query string to make archive class values
+			$new_value = sanitize_html_class( $_POST['mini_archive_type'] );
+			update_post_meta($post_id, 'mini_archive', $new_value);
 		}
-		// generate wp-query string to make archive class values
-		$new_value = sanitize_html_class( $_POST['mini_archive_type'] );
-		update_post_meta($post_id, $meta_key, $new_value);
 		
 		
-		delete_post_meta( $post_id, 'mini_archive_filters'); // delete all filters
-		if(!isset($_POST['mini_archive_filters'])){
-			return true;
+		
+		if(isset($_POST['mini_archive_filters'])){
+			delete_post_meta( $post_id, 'mini_archive_filters');
+			foreach($_POST['mini_archive_filters'] as $filter):
+				if($filter['term'] && $filter['term']!=""){
+					add_post_meta($post_id, 'mini_archive_filters', serialize($filter));
+				}
+			endforeach;
 		}
-		foreach($_POST['mini_archive_filters'] as $filter):
-			if($filter['term'] && $filter['term']!=""){
-				add_post_meta($post_id, 'mini_archive_filters', serialize($filter));
-			}
-		endforeach;
 	}
 	
 	function mini_archive_meta_boxes(){
@@ -90,6 +89,7 @@
 	}
 	
 	function mini_archive_meta_box($object,$box){
+		$archive_active = get_post_meta($object->ID,'mini_archive_active',true);
 		$archive_value = get_post_meta($object->ID,'mini_archive',true);
 		$archive_filters = get_post_meta($object->ID,'mini_archive_filters',false);
 		
