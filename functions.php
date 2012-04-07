@@ -95,16 +95,25 @@ function mini_archive_filter_by_url_vars($args){
 }
 
 function mini_archive_get_users($ID=false){
-	$ID = mini_archive_on_page($ID);
 	if(!$ID){
+		$ID = get_the_ID();
+	}
+	$archive_type = mini_archive_on_page($ID);
+	if(!$archive_type){
 		return false;
 	}
-	$query = array();
-	$filters = get_post_meta($ID,'mini_archive_filters',false);
+	$args = array();
+	$filters = mini_archive_get_filters($ID);
 	foreach($filters as $filter):
-		
+		if($filter['type'] == 'post2post'){
+			$args = array_merge($args,array(
+			  'connected_type' => $filter['term'],
+			  'connected_items' => $filter['value'],
+			));
+		}
+		print_r($filter);
 	endforeach;
-	return get_users($query);
+	return get_users($args);
 }
 
 ?>

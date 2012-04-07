@@ -7,7 +7,7 @@ function mini_archive_draw(){
 	global $wp_query;
 	if(is_page() && mini_archive_on_page()){
 			$archive_type = get_post_meta(get_the_ID(),'mini_archive',true);
-			if($archive_type=='users'):
+			if($archive_type=='user'):
 				$users = mini_archive_get_users();
 				$locations = array(
 					'/mini_archive-users.php',
