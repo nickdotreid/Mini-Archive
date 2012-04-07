@@ -95,9 +95,8 @@
 		}
 		
 		
-		
+		delete_post_meta( $post_id, 'mini_archive_filters');
 		if(isset($_POST['mini_archive_filters'])){
-			delete_post_meta( $post_id, 'mini_archive_filters');
 			foreach($_POST['mini_archive_filters'] as $filter):
 				if($filter['term'] && $filter['term']!=""){
 					add_post_meta($post_id, 'mini_archive_filters', serialize($filter));

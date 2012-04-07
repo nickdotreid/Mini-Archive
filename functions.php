@@ -35,31 +35,48 @@ function mini_archive_get_query($ID=false){
 		"post_type"=>get_post_meta($ID,'mini_archive',true),
 		"post_status"=>'publish',
 		"order_by" => 'menu_order date title',
-		"tax_query" => mini_archive_get_tax_query($ID),
 	);
+	$filters = mini_archive_get_filters($ID);
+	foreach($filters as $filter){
+		$args = mini_archive_add_filter_to_query_args($args,$filter);
+	}
+	$args = mini_archive_filter_by_url_vars($args);
 	$query = new WP_Query($args);
 	return $query;
 }
 
-function mini_archive_get_tax_query($ID){
-	$tax_query = array('relation'=>'AND');
-	$filters = mini_archive_get_filters($ID);
-	foreach($filters as $filter){
+function mini_archive_add_filter_to_query_args($args,$filter){
+	if($filter['type'] == 'taxonomy'){
+		$tax_query = array('relation'=>'AND');
+		if(isset($args['tax_query'])){
+			$tax_query = $args['tax_query'];
+		}
 		$query = array(
-			'taxonomy' => $filter['type'],
+			'taxonomy' => $filter['term'],
 			'field' => 'slug',
-			'terms' => $filter['term'],
+			'terms' => $filter['value'],
 		);
 		if(array_key_exists('operator',$filter)){
 			$query['operator'] = $filter['operator'];
 		}
 		array_push($tax_query,$query);
+		$args['tax_query'] = $tax_query;
+		return $args;
 	}
-	return array_merge($tax_query,mini_archive_get_url_vars());
+	if($filter['type'] == 'post2post'){
+		return array_merge($args,array(
+			'connected_type' => $filter['term'],
+			'connected_items' => $filter['value'],
+			));
+	}
+	return $args;
 }
 
-function mini_archive_get_url_vars(){
-	$tax_query = array();
+function mini_archive_filter_by_url_vars($args){
+	$tax_query = array('relation'=>'AND');
+	if(isset($args['tax_query'])){
+		$tax_query = $args['tax_query'];
+	}
 	$get_keys = array_keys($_GET);
 	foreach($get_keys as $key){
 		if(taxonomy_exists($key)){
@@ -73,7 +90,8 @@ function mini_archive_get_url_vars(){
 			}
 		}
 	}
-	return $tax_query;
+	$args['tax_query'] = $tax_query;
+	return $args;
 }
 
 function mini_archive_get_users($ID=false){
