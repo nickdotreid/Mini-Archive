@@ -19,6 +19,26 @@
 	function mini_archive_draw_add_query_field($post_type){
 		$relationships = array();
 		
+		$p2p_relations = P2P_Connection_Type_Factory::get_all_instances();
+		foreach($p2p_relations as $p2p){
+			$add = false;
+			foreach($p2p->side as $side => $obj){
+				if(isset($obj->post_type) && is_array($obj->post_type)){
+					foreach($obj->post_type as $pt){
+						if($pt == $post_type){
+							$add = true;
+						}
+					}
+				}
+			}
+			if($add){
+				$relationships[] = (object) array(
+					"name" => $p2p->name,
+					"label" => $p2p->name,
+				);
+			}
+		}
+		
 		$taxonomies = get_object_taxonomies( $post_type );
 		if($taxonomies || count($taxonomies)>0 ){
 			foreach($taxonomies as $taxonomy){
