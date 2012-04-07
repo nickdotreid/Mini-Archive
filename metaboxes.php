@@ -11,7 +11,7 @@
 	add_action('wp_ajax_mini_archive_get_relations', 'mini_archive_ajax_get_relations');
 	function mini_archive_ajax_get_relations(){
 		if(isset($_POST['post_type']) && $_POST['post_type']!=""){
-			mini_archive_draw_query($_POST['taxonomy']);
+			mini_archive_draw_add_query_field($_POST['post_type']);
 		}
 		die();
 	}
