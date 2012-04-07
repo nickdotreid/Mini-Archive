@@ -20,21 +20,30 @@
 		$relationships = array();
 		
 		$p2p_relations = P2P_Connection_Type_Factory::get_all_instances();
+		console($p2p_relations);
 		foreach($p2p_relations as $p2p){
-			$add = false;
+			$add = array();
+			if($post_type == "user"){
+				foreach($p2p->object as $side => $obj){
+					if($obj == $post_type){
+						$add[$side] = true;
+					}
+				}
+			}
 			foreach($p2p->side as $side => $obj){
 				if(isset($obj->post_type) && is_array($obj->post_type)){
 					foreach($obj->post_type as $pt){
 						if($pt == $post_type){
-							$add = true;
+							$add[$side] = true;
 						}
 					}
 				}
 			}
-			if($add){
+			foreach($add as $side => $val){
 				$relationships[] = (object) array(
 					"name" => $p2p->name,
-					"label" => $p2p->name,
+					"label" => $p2p->title[$side],
+					"direction" => $side,
 				);
 			}
 		}
@@ -115,7 +124,7 @@
 	function mini_archive_get_post_types(){
 		$post_types = get_post_types(Array(),'objects');
 		array_push($post_types,(object) array(
-			"name"=>"users",
+			"name"=>"user",
 			"label"=>"Users"
 		));
 		return $post_types;
