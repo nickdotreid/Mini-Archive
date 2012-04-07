@@ -1,10 +1,12 @@
 <fieldset id="mini_archive">
 	<fieldset>
-		<input id="mini_archive_opt_in" name="mini_archive_opt_in" value="true" type="checkbox" <? if($archive_active){ echo 'checked="checked"'; } ?> />
-		<label for="mini_archive_opt_in"><?=_e("Add an archive to this page.");?></label>
+		<div class="form_row">
+			<input id="mini_archive_opt_in" name="mini_archive_opt_in" value="true" type="checkbox" <? if($archive_active){ echo 'checked="checked"'; } ?> />
+			<label for="mini_archive_opt_in"><?=_e("Add an archive to this page.");?></label>
+		</div>
 	</fieldset>
 	<fieldset>
-		<div class="form_row">
+		<div id="mini_archive_pick_post_type" class="form_row">
 			<label for="mini_archive_type"><?=_e("Type of content to list");?></label>
 			<select id="mini_archive_type" name="mini_archive_type">
 				<? foreach($post_types as $post_type):	?>
@@ -12,15 +14,9 @@
 				<? endforeach; ?>
 			</select>
 		</div>
-		<div class="form_row">
-			<label for="mini_archive_add_query">
-			<select id="mini_archive_add_query">
-			<? foreach($taxonomies as $term):	?>
-				<option value="<?=$term->name;?>"><?=$term->label;?></option>
-			<?	endforeach;	?>
-			</select>
-			<a id="mini_archive_add_query_button" href="#" class="button"><?=_e("Add Query Type");?></a>
-		</label>
+		<?	if($archive_value):	?>
+		<?	mini_archive_draw_add_query_field($archive_value);	?>
+		<?	endif;	?>
 	</fieldset>
 	<fieldset id="mini_archive_queries" class="queries">
 		<legend><?=_e('Queries');?></legend>

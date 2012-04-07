@@ -1,12 +1,6 @@
 <?php
-
-	
-	/* Fire our meta box setup function on the post editor screen. */
-	add_action( 'load-page.php', 'mini_archive_meta_boxes_setup' );
-	add_action( 'load-page-new.php', 'mini_archive_meta_boxes_setup' );
 	
 	add_action('wp_ajax_mini_archive_get_terms', 'mini_archive_ajax_get_terms');
-	
 	function mini_archive_ajax_get_terms(){
 		if(isset($_POST['taxonomy']) && $_POST['taxonomy']!=""){
 			mini_archive_draw_query($_POST['taxonomy']);
@@ -14,6 +8,30 @@
 		die();
 	}
 	
+	add_action('wp_ajax_mini_archive_get_relations', 'mini_archive_ajax_get_relations');
+	function mini_archive_ajax_get_relations(){
+		if(isset($_POST['post_type']) && $_POST['post_type']!=""){
+			mini_archive_draw_query($_POST['taxonomy']);
+		}
+		die();
+	}
+	
+	function mini_archive_draw_add_query_field($post_type){
+		$relationships = array();
+		
+		$taxonomies = get_object_taxonomies( $post_type );
+		if($taxonomies || count($taxonomies)>0 ){
+			foreach($taxonomies as $taxonomy){
+				$relationships[] = get_taxonomy($taxonomy);
+			}
+		}
+		
+		$template_path = MINI_ARCHIVE_PLUGIN_DIR.'/templates/admin/add_query_field.php';
+		if(file_exists($template_path)) include $template_path;
+	}
+	
+	add_action( 'load-page-new.php', 'mini_archive_meta_boxes_setup' );
+	add_action( 'load-page.php', 'mini_archive_meta_boxes_setup' );
 	function mini_archive_meta_boxes_setup(){
 		add_action( 'admin_head','mini_archive_admin_head');
 		add_action( 'add_meta_boxes', 'mini_archive_meta_boxes' );
