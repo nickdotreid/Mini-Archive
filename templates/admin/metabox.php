@@ -14,6 +14,8 @@
 				<? endforeach; ?>
 			</select>
 		</div>
+	</fieldset>
+	<fieldset>
 		<?	if($archive_value):	?>
 		<?	mini_archive_draw_add_query_field($archive_value);	?>
 		<?	endif;	?>
@@ -21,8 +23,7 @@
 	<fieldset id="mini_archive_queries" class="queries">
 		<legend><?=_e('Queries');?></legend>
 		<? foreach($archive_filters as $filter):
-			$filter = unserialize($filter);
-			mini_archive_draw_query($filter['type'],$filter);
+			mini_archive_draw_query(unserialize($filter));
 		endforeach;	?>
 	</fieldset>
 </fieldset>

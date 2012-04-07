@@ -2,8 +2,8 @@
 	
 	add_action('wp_ajax_mini_archive_get_terms', 'mini_archive_ajax_get_terms');
 	function mini_archive_ajax_get_terms(){
-		if(isset($_POST['taxonomy']) && $_POST['taxonomy']!=""){
-			mini_archive_draw_query($_POST['taxonomy']);
+		if(isset($_POST['type']) && $_POST['type']!=""){
+			mini_archive_draw_query($_POST);
 		}
 		die();
 	}
@@ -20,7 +20,6 @@
 		$relationships = array();
 		
 		$p2p_relations = P2P_Connection_Type_Factory::get_all_instances();
-		console($p2p_relations);
 		foreach($p2p_relations as $p2p){
 			$add = array();
 			if($post_type == "user"){
@@ -40,10 +39,15 @@
 				}
 			}
 			foreach($add as $side => $val){
+				$other_side = "from";
+				if($side == "from"){
+					$other_side = "to";
+				}
 				$relationships[] = (object) array(
 					"name" => $p2p->name,
 					"label" => $p2p->title[$side],
-					"direction" => $side,
+					"type" => "post2post",
+					"direction" => $other_side,
 				);
 			}
 		}
@@ -51,7 +55,12 @@
 		$taxonomies = get_object_taxonomies( $post_type );
 		if($taxonomies || count($taxonomies)>0 ){
 			foreach($taxonomies as $taxonomy){
-				$relationships[] = get_taxonomy($taxonomy);
+				$tax = get_taxonomy($taxonomy);
+				$relationships[] = (object) array(
+					"name" => $tax->name,
+					"label" => $tax->label,
+					"type" => "taxonomy",
+				);
 			}
 		}
 		
@@ -108,17 +117,38 @@
 			);
 	}
 	
-	function mini_archive_draw_query($tax,$query=false){
-		$terms = get_terms($tax);
+	function mini_archive_draw_query($query){
+		extract($query);
 		
-		$locations = array(
-			'/templates/mini_archive/admin/query.php',
-			'/mini_archive/admin/query.php',
-			'/admin/mini_archive_query.php',
-		);
-		if(locate_template( $locations )==""):
-			include MINI_ARCHIVE_PLUGIN_DIR.'/templates/admin/query.php';
-		endif;
+		$objects = array();
+		
+		if($type == 'taxonomy'){
+			$terms = get_terms($term);
+			foreach($terms as $t){
+				$objects[] = (object) array(
+					'slug' => $t->slug,
+					'name' => $t->name,
+				);
+			}
+		}else if($type == 'post2post' && isset($direction)){
+			$connected = p2p_get_connections($term,array(
+				'fields' => 'p2p_'.$direction,
+			));
+			$added_ids = array();
+			foreach($connected as $post_id){
+				if(!in_array($post_id,$added_ids)){
+					$added_ids[] = $post_id;
+					$post = get_post($post_id);
+					$objects[] = (object) array(
+						'slug' => $post->ID,
+						'name' => $post->post_title,
+					);
+				}
+			}
+		}
+		
+		$template_path = MINI_ARCHIVE_PLUGIN_DIR.'/templates/admin/query.php';
+		if(file_exists($template_path)) include $template_path;
 	}
 	
 	function mini_archive_get_post_types(){

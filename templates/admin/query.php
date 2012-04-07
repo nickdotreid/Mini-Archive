@@ -1,9 +1,13 @@
 <fieldset class="query">
-	<?	if(count($terms)>0):	?>
-	<input type="hidden" name="mini_archive_filters[position][type]" value="<?=$tax;?>" />
+	<?	if(count($objects)>0):	?>
+	<input type="hidden" name="mini_archive_filters[position][type]" value="<?=$type;?>" />
+	<input type="hidden" name="mini_archive_filters[position][term]" value="<?=$term;?>" />
+	<?	if(isset($direction)):	?>
+	<input type="hidden" name="mini_archive_filters[position][direction]" value="<?=$direction;?>" />
+	<?	endif;	?>
 	<label>Pick a query term</label>
-	<select name="mini_archive_filters[position][term]">
-		<? foreach($terms as $term):
+	<select name="mini_archive_filters[position][value]">
+		<? foreach($objects as $object):
 			$child = false;
 			include "query-item.php";
 		endforeach;	?>

@@ -1,8 +1,3 @@
-<option <? if($query && $query['term']==$term->slug){ echo 'selected="selected"'; }?> value="<?=$term->slug;?>"><?if($child){	echo "-";	}?><?=$term->name;?> (<?=$term->slug;?>)</option>
-<?
-$children = get_terms($term->taxonomy,array("parent"=>$term->term_id,'hide_empty'=>false));
-foreach($children as $term){
-	$child = true;
-	include("query-item.php");
-}
-?>
+<option <?
+	if($query && $query['value']==$object->slug){ echo 'selected="selected"'; }
+	?> value="<?=$object->slug;?>"><?if($child){	echo "-";	}?><?=$object->name;?> (<?=$object->slug;?>)</option>

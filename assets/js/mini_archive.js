@@ -1,12 +1,16 @@
 jQuery(document).ready(function(){
 	jQuery("#mini_archive").delegate("#mini_archive_add_query_button","click",function(event){
 		event.preventDefault();
+		var selected_obj = jQuery("#mini_archive_add_query option:selected");
+		
 		jQuery.ajax({
 			url:ajaxurl,
 			type:"POST",
 			data:{
 				action:"mini_archive_get_terms",
-				taxonomy:jQuery("#mini_archive_add_query option:selected").val(),
+				type:selected_obj.attr("connection_type"),
+				term:selected_obj.val(),
+				direction:selected_obj.attr("direction")
 			},
 			success:function(data){
 				if(data!=""){
@@ -18,6 +22,7 @@ jQuery(document).ready(function(){
 		event.preventDefault();
 		jQuery(this).parents(".query:first").remove();
 	}).delegate("#mini_archive_type").change(function(event){
+		if(event.target != jQuery("#mini_archive_type")[0]) return true;
 		jQuery("#mini_archive_add_query").remove();
 		jQuery("#mini_archive_queries .query").remove();
 		jQuery.ajax({
