@@ -15,6 +15,9 @@
 	define( 'MINI_ARCHIVE_PLUGIN_DIR', dirname( __FILE__ ) );
 	define ( 'MINI_ARCHIVE_DB_VERSION', '1' );
 	
+	include_once('filters/taxonomy.php');
+	include_once('filters/post2post.php');
+	
 	require_once('draw.php');
 	require_once('metaboxes.php');
 

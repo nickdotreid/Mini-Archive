@@ -38,38 +38,11 @@ function mini_archive_get_query($ID=false){
 	);
 	$filters = mini_archive_get_filters($ID);
 	foreach($filters as $filter){
-		$args = mini_archive_add_filter_to_query_args($args,$filter);
+		$args = apply_filters('mini_archive_filter_query',$args,$filter);
 	}
 	$args = mini_archive_filter_by_url_vars($args);
 	$query = new WP_Query($args);
 	return $query;
-}
-
-function mini_archive_add_filter_to_query_args($args,$filter){
-	if($filter['type'] == 'taxonomy'){
-		$tax_query = array('relation'=>'AND');
-		if(isset($args['tax_query'])){
-			$tax_query = $args['tax_query'];
-		}
-		$query = array(
-			'taxonomy' => $filter['term'],
-			'field' => 'slug',
-			'terms' => $filter['value'],
-		);
-		if(array_key_exists('operator',$filter)){
-			$query['operator'] = $filter['operator'];
-		}
-		array_push($tax_query,$query);
-		$args['tax_query'] = $tax_query;
-		return $args;
-	}
-	if($filter['type'] == 'post2post'){
-		return array_merge($args,array(
-			'connected_type' => $filter['term'],
-			'connected_items' => $filter['value'],
-			));
-	}
-	return $args;
 }
 
 function mini_archive_filter_by_url_vars($args){
@@ -105,13 +78,7 @@ function mini_archive_get_users($ID=false){
 	$args = array();
 	$filters = mini_archive_get_filters($ID);
 	foreach($filters as $filter):
-		if($filter['type'] == 'post2post'){
-			$args = array_merge($args,array(
-			  'connected_type' => $filter['term'],
-			  'connected_items' => $filter['value'],
-			));
-		}
-		print_r($filter);
+		$args = apply_filters('mini_archive_filter_user_query',$args,$filter);
 	endforeach;
 	return get_users($args);
 }

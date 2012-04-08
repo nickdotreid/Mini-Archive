@@ -19,51 +19,7 @@
 	function mini_archive_draw_add_query_field($post_type){
 		$relationships = array();
 		
-		$p2p_relations = P2P_Connection_Type_Factory::get_all_instances();
-		foreach($p2p_relations as $p2p){
-			$add = array();
-			if($post_type == "user"){
-				foreach($p2p->object as $side => $obj){
-					if($obj == $post_type){
-						$add[$side] = true;
-					}
-				}
-			}
-			foreach($p2p->side as $side => $obj){
-				if(isset($obj->post_type) && is_array($obj->post_type)){
-					foreach($obj->post_type as $pt){
-						if($pt == $post_type){
-							$add[$side] = true;
-						}
-					}
-				}
-			}
-			foreach($add as $side => $val){
-				$other_side = "from";
-				if($side == "from"){
-					$other_side = "to";
-				}
-				$relationships[] = (object) array(
-					"name" => $p2p->name,
-					"label" => $p2p->title[$side],
-					"type" => "post2post",
-					"direction" => $other_side,
-				);
-			}
-		}
-		
-		$taxonomies = get_object_taxonomies( $post_type );
-		if($taxonomies || count($taxonomies)>0 ){
-			foreach($taxonomies as $taxonomy){
-				$tax = get_taxonomy($taxonomy);
-				$relationships[] = (object) array(
-					"name" => $tax->name,
-					"label" => $tax->label,
-					"type" => "taxonomy",
-				);
-			}
-		}
-		
+		$relationships = apply_filters('mini_archive_filter_query_type_list',$relationships,$post_type);
 		$template_path = MINI_ARCHIVE_PLUGIN_DIR.'/templates/admin/add_query_field.php';
 		if(file_exists($template_path)) include $template_path;
 	}
@@ -120,31 +76,7 @@
 		extract($query);
 		
 		$objects = array();
-		
-		if($type == 'taxonomy'){
-			$terms = get_terms($term);
-			foreach($terms as $t){
-				$objects[] = (object) array(
-					'slug' => $t->slug,
-					'name' => $t->name,
-				);
-			}
-		}else if($type == 'post2post' && isset($direction)){
-			$connected = p2p_get_connections($term,array(
-				'fields' => 'p2p_'.$direction,
-			));
-			$added_ids = array();
-			foreach($connected as $post_id){
-				if(!in_array($post_id,$added_ids)){
-					$added_ids[] = $post_id;
-					$post = get_post($post_id);
-					$objects[] = (object) array(
-						'slug' => $post->ID,
-						'name' => $post->post_title,
-					);
-				}
-			}
-		}
+		$objects = apply_filters('mini_archive_filter_query_object',$objects,$query);
 		
 		$template_path = MINI_ARCHIVE_PLUGIN_DIR.'/templates/admin/query.php';
 		if(file_exists($template_path)) include $template_path;
