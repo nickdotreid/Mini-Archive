@@ -16,14 +16,6 @@
 		die();
 	}
 	
-	function mini_archive_draw_add_query_field($post_type){
-		$relationships = array();
-		
-		$relationships = apply_filters('mini_archive_filter_query_type_list',$relationships,$post_type);
-		$template_path = MINI_ARCHIVE_PLUGIN_DIR.'/templates/admin/add_query_field.php';
-		if(file_exists($template_path)) include $template_path;
-	}
-	
 	add_action( 'load-page-new.php', 'mini_archive_meta_boxes_setup' );
 	add_action( 'load-page.php', 'mini_archive_meta_boxes_setup' );
 	function mini_archive_meta_boxes_setup(){
@@ -72,6 +64,32 @@
 			);
 	}
 	
+	function mini_archive_meta_box($object,$box){
+		$archive_active = get_post_meta($object->ID,'mini_archive_active',true);
+		$archive_value = get_post_meta($object->ID,'mini_archive',true);
+		$archive_filters = get_post_meta($object->ID,'mini_archive_filters',false);
+		
+		$post_types = mini_archive_get_post_types();
+		$taxonomies = mini_archive_get_taxonomies();
+		
+		$locations = array(
+			'/templates/mini_archive/admin/metabox.php',
+			'/mini_archive/admin/metabox.php',
+			'/admin/mini_archive_metabox.php',
+		);
+		if(locate_template( $locations )==""):
+			include MINI_ARCHIVE_PLUGIN_DIR.'/templates/admin/metabox.php';
+		endif;
+	}
+	
+	function mini_archive_draw_add_query_field($post_type){
+		$relationships = array();
+		
+		$relationships = apply_filters('mini_archive_filter_query_type_list',$relationships,$post_type);
+		$template_path = MINI_ARCHIVE_PLUGIN_DIR.'/templates/admin/add_query_field.php';
+		if(file_exists($template_path)) include $template_path;
+	}
+	
 	function mini_archive_draw_query($query){
 		extract($query);
 		
@@ -94,24 +112,6 @@
 	function mini_archive_get_taxonomies(){
 		$taxonomies = get_taxonomies(Array(),'objects');
 		return $taxonomies;
-	}
-	
-	function mini_archive_meta_box($object,$box){
-		$archive_active = get_post_meta($object->ID,'mini_archive_active',true);
-		$archive_value = get_post_meta($object->ID,'mini_archive',true);
-		$archive_filters = get_post_meta($object->ID,'mini_archive_filters',false);
-		
-		$post_types = mini_archive_get_post_types();
-		$taxonomies = mini_archive_get_taxonomies();
-		
-		$locations = array(
-			'/templates/mini_archive/admin/metabox.php',
-			'/mini_archive/admin/metabox.php',
-			'/admin/mini_archive_metabox.php',
-		);
-		if(locate_template( $locations )==""):
-			include MINI_ARCHIVE_PLUGIN_DIR.'/templates/admin/metabox.php';
-		endif;
 	}
 
 ?>
