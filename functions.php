@@ -4,9 +4,10 @@ function mini_archive_on_page($ID=false){
 	if(!$ID){
 		$ID = get_the_ID();
 	}
-	$archive = get_post_meta($ID,'mini_archive',true);
-	if($archive){
-		return $archive;
+	$active = get_post_meta($ID,'mini_archive_active',true);
+	$archive_type = get_post_meta($ID,'mini_archive',true);
+	if($active){
+		return $archive_type;
 	}
 	return false;
 }
