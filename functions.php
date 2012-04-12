@@ -24,7 +24,7 @@ function mini_archive_get_filters($ID=false){
 	return $unserialized_filters;
 }
 
-function mini_archive_get_query($ID=false){
+function mini_archive_get_query($ID=false,$args=array()){
 	if(!$ID){
 		$ID = get_the_ID();
 	}
@@ -32,11 +32,11 @@ function mini_archive_get_query($ID=false){
 	if(!$archive_type){
 		return false;
 	}
-	$args = array(
+	$args = array_merge(array(
 		"post_type"=>get_post_meta($ID,'mini_archive',true),
 		"post_status"=>'publish',
 		"order_by" => 'menu_order date title',
-	);
+	),$args);
 	$filters = mini_archive_get_filters($ID);
 	foreach($filters as $filter){
 		$args = apply_filters('mini_archive_filter_query',$args,$filter);
