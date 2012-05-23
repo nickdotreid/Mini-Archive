@@ -20,7 +20,9 @@ add_filter('mini_archive_filter_query_object','mini_archive_taxonomy_objects',10
 function mini_archive_taxonomy_objects($objects,$query){
 	extract($query);
 	if($type == 'taxonomy'){
-		$terms = get_terms($term);
+		$terms = get_terms($term,array(
+			"hide_empty" => false,
+		));
 		foreach($terms as $t){
 			$objects[] = (object) array(
 				'slug' => $t->slug,
