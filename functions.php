@@ -54,13 +54,16 @@ function mini_archive_filter_by_url_vars($args){
 	$get_keys = array_keys($_GET);
 	foreach($get_keys as $key){
 		if(taxonomy_exists($key)){
-			$term = get_term_by("slug",$_GET[$key],$key);
-			if($term){
-				array_push($tax_query,array(
-					'taxonomy' => $term->taxonomy,
-					'field' => 'slug',
-					'terms' => $term->slug,
-				));
+			$terms = explode(",",$_GET[$key]);
+			foreach($terms as $t){
+				$term = get_term_by("slug",$t,$key);
+				if($term){
+					array_push($tax_query,array(
+						'taxonomy' => $term->taxonomy,
+						'field' => 'slug',
+						'terms' => $term->slug,
+					));
+				}
 			}
 		}
 	}
