@@ -42,6 +42,7 @@ function mini_archive_get_query($ID=false,$args=array()){
 		$args = apply_filters('mini_archive_filter_query',$args,$filter);
 	}
 	$args = mini_archive_filter_by_url_vars($args);
+	$args = apply_filters('mini_archive_pre_get_posts',$args);
 	$query = new WP_Query($args);
 	return $query;
 }
